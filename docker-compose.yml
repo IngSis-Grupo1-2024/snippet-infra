@@ -19,7 +19,7 @@ services:
     container_name: db-runner
     image: postgres:12
     ports:
-      - ${POSTGRES_PORT_RUNNER}:${POSTGRES_PORT_RUNNER}
+      - ${POSTGRES_PORT_RUNNER}:5432
     environment:
       #   best idea -> .env in repository
       POSTGRES_USER: ${POSTGRES_USER}
@@ -47,7 +47,7 @@ services:
     container_name: db-operations
     image: postgres:12
     ports:
-      - ${POSTGRES_PORT_OPERATIONS}:${POSTGRES_PORT_OPERATIONS}
+      - ${POSTGRES_PORT_OPERATIONS}:5432
     environment:
       #   best idea -> .env in repository
       POSTGRES_USER: ${POSTGRES_USER}
@@ -74,7 +74,7 @@ services:
     container_name: db-configurations
     image: postgres:12
     ports:
-      - ${POSTGRES_PORT_CONFIGURATIONS}:${POSTGRES_PORT_CONFIGURATIONS}
+      - ${POSTGRES_PORT_CONFIGURATIONS}:5432
     environment:
       #   best idea -> .env in repository
       POSTGRES_USER: ${POSTGRES_USER}
@@ -101,7 +101,7 @@ services:
     container_name: db-permissions
     image: postgres:12
     ports:
-      - ${POSTGRES_PORT_PERMISSIONS}:${POSTGRES_PORT_PERMISSIONS}
+      - ${POSTGRES_PORT_PERMISSIONS}:5432
     environment:
       #   best idea -> .env in repository
       POSTGRES_USER: ${POSTGRES_USER}
