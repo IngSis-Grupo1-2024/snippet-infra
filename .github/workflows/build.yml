@@ -16,7 +16,7 @@ jobs:
           java-version: 17
           distribution: corretto
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew assemble
         env:
           GITHUB_AUTHOR: ${{ secrets.AUTHOR }}
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
