@@ -29,4 +29,4 @@ jobs:
         with:
           push: true
           tags: |
-           ghcr.io/IngSis-Grupo1-2024/echo:${{ steps.short-sha.outputs.sha }}
+           ghcr.io/ingsis-grupo1-2024/echo:${{ steps.short-sha.outputs.sha }}
