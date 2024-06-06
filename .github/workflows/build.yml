@@ -2,13 +2,6 @@ name: Build
 
 on:
   workflow_call:
-    inputs:
-      GITHUB_ACTOR:
-        type: string
-        required: true
-    secrets:
-      TOKEN:
-        required: true
 
 jobs:
   build:
