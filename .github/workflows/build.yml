@@ -2,13 +2,6 @@ name: Build
 
 on:
   workflow_call:
-    inputs:
-      actor:
-        required: true
-        type: string
-    secrets:
-      token:
-        required: true
 
 jobs:
   build:
@@ -25,5 +18,5 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assemble
         env:
-          GITHUB_AUTHOR: ${{ inputs.actor }}
-          GITHUB_TOKEN: ${{ secrets.token }}
+          GITHUB_AUTHOR: ${{ secrets.ACTOR }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
