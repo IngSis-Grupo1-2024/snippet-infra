@@ -32,5 +32,5 @@ jobs:
            ghcr.io/ingsis-grupo1-2024/echo:${{ steps.short-sha.outputs.sha }}
            
           build-args: |
-            GITHUB_AUTHOR=${{ github.repository_owner }}
-            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+            ACTOR=${{ github.repository_owner }}
+            TOKEN=${{ secrets.GITHUB_TOKEN }}
