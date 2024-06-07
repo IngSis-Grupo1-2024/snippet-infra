@@ -26,6 +26,9 @@ jobs:
       - name: Push to GitHub Packages
         id: docker_build
         uses: docker/build-push-action@v4
+        env:
+          GITHUB_AUTHOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           push: true
           tags: |
