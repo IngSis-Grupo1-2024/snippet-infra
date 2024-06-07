@@ -3,9 +3,7 @@ version: '3'
 services:
   api-runner:
     container_name: "api-runner"
-    build:
-      context: https://github.com/IngSis-Grupo1-2024/snippet-runner.git
-      dockerfile: Dockerfile.multi
+    image: ghcr.io/ingsis-grupo1-2024/echo:latest
     ports:
       - ${DB_PORT_RUNNER}:${DB_PORT_RUNNER}
     environment:
@@ -29,86 +27,86 @@ services:
       - db-runner:/var/lib/postgresql/data
 
 
-  api-operations:
-    container_name: "api-operations"
-    build:
-      context: https://github.com/IngSis-Grupo1-2024/snippet-operations.git
-      dockerfile: Dockerfile.multi
-    ports:
-      - ${DB_PORT_OPERATIONS}:${DB_PORT_OPERATIONS}
-    environment:
-      #   best idea -> .env in repository
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME_OPERATIONS}
-      DB_HOST: ${DB_NAME_OPERATIONS}
-      DB_PORT: ${DB_PORT_OPERATIONS}
-  db-operations:
-    container_name: db-operations
-    image: postgres:12
-    ports:
-      - ${POSTGRES_PORT_OPERATIONS}:5432
-    environment:
-      #   best idea -> .env in repository
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB_OPERATIONS}
-    volumes:
-      - db-operations:/var/lib/postgresql/data
+#  api-operations:
+#    container_name: "api-operations"
+#    build:
+#      context: https://github.com/IngSis-Grupo1-2024/snippet-operations.git
+#      dockerfile: Dockerfile.multi
+#    ports:
+#      - ${DB_PORT_OPERATIONS}:${DB_PORT_OPERATIONS}
+#    environment:
+#      #   best idea -> .env in repository
+#      DB_USER: ${DB_USER}
+#      DB_PASSWORD: ${DB_PASSWORD}
+#      DB_NAME: ${DB_NAME_OPERATIONS}
+#      DB_HOST: ${DB_NAME_OPERATIONS}
+#      DB_PORT: ${DB_PORT_OPERATIONS}
+#  db-operations:
+#    container_name: db-operations
+#    image: postgres:12
+#    ports:
+#      - ${POSTGRES_PORT_OPERATIONS}:5432
+#    environment:
+#      #   best idea -> .env in repository
+#      POSTGRES_USER: ${POSTGRES_USER}
+#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#      POSTGRES_DB: ${POSTGRES_DB_OPERATIONS}
+#    volumes:
+#      - db-operations:/var/lib/postgresql/data
 
-  api-configurations:
-    container_name: "api-configurations"
-    build:
-      context: https://github.com/IngSis-Grupo1-2024/snippet-configurations.git
-      dockerfile: Dockerfile.multi
-    ports:
-      - ${DB_PORT_CONFIGURATIONS}:${DB_PORT_CONFIGURATIONS}
-    environment:
-      #   best idea -> .env in repository
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME_CONFIGURATIONS}
-      DB_HOST: ${DB_NAME_CONFIGURATIONS}
-      DB_PORT: ${DB_PORT_CONFIGURATIONS}
-  db-configurations:
-    container_name: db-configurations
-    image: postgres:12
-    ports:
-      - ${POSTGRES_PORT_CONFIGURATIONS}:5432
-    environment:
-      #   best idea -> .env in repository
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB_CONFIGURATIONS}
-    volumes:
-      - db-configurations:/var/lib/postgresql/data
+#  api-configurations:
+#    container_name: "api-configurations"
+#    build:
+#      context: https://github.com/IngSis-Grupo1-2024/snippet-configurations.git
+#      dockerfile: Dockerfile.multi
+#    ports:
+#      - ${DB_PORT_CONFIGURATIONS}:${DB_PORT_CONFIGURATIONS}
+#    environment:
+#      #   best idea -> .env in repository
+#      DB_USER: ${DB_USER}
+#      DB_PASSWORD: ${DB_PASSWORD}
+#      DB_NAME: ${DB_NAME_CONFIGURATIONS}
+#      DB_HOST: ${DB_NAME_CONFIGURATIONS}
+#      DB_PORT: ${DB_PORT_CONFIGURATIONS}
+#  db-configurations:
+#    container_name: db-configurations
+#    image: postgres:12
+#    ports:
+#      - ${POSTGRES_PORT_CONFIGURATIONS}:5432
+#    environment:
+#      #   best idea -> .env in repository
+#      POSTGRES_USER: ${POSTGRES_USER}
+#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#      POSTGRES_DB: ${POSTGRES_DB_CONFIGURATIONS}
+#    volumes:
+#      - db-configurations:/var/lib/postgresql/data
 
-  api-permissions:
-    container_name: "api-permissions"
-    build:
-      context: https://github.com/IngSis-Grupo1-2024/snippet-permission.git
-      dockerfile: Dockerfile.multi
-    ports:
-      - ${DB_PORT_PERMISSIONS}:${DB_PORT_PERMISSIONS}
-    environment:
-      #   best idea -> .env in repository
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME_PERMISSIONS}
-      DB_HOST: ${DB_NAME_PERMISSIONS}
-      DB_PORT: ${DB_PORT_PERMISSIONS}
-  db-permissions:
-    container_name: db-permissions
-    image: postgres:12
-    ports:
-      - ${POSTGRES_PORT_PERMISSIONS}:5432
-    environment:
-      #   best idea -> .env in repository
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB_PERMISSIONS}
-    volumes:
-      - db-permissions:/var/lib/postgresql/data
+#  api-permissions:
+#    container_name: "api-permissions"
+#    build:
+#      context: https://github.com/IngSis-Grupo1-2024/snippet-permission.git
+#      dockerfile: Dockerfile.multi
+#    ports:
+#      - ${DB_PORT_PERMISSIONS}:${DB_PORT_PERMISSIONS}
+#    environment:
+#      #   best idea -> .env in repository
+#      DB_USER: ${DB_USER}
+#      DB_PASSWORD: ${DB_PASSWORD}
+#      DB_NAME: ${DB_NAME_PERMISSIONS}
+#      DB_HOST: ${DB_NAME_PERMISSIONS}
+#      DB_PORT: ${DB_PORT_PERMISSIONS}
+#  db-permissions:
+#    container_name: db-permissions
+#    image: postgres:12
+#    ports:
+#      - ${POSTGRES_PORT_PERMISSIONS}:5432
+#    environment:
+#      #   best idea -> .env in repository
+#      POSTGRES_USER: ${POSTGRES_USER}
+#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#      POSTGRES_DB: ${POSTGRES_DB_PERMISSIONS}
+#    volumes:
+#      - db-permissions:/var/lib/postgresql/data
 
 volumes:
   db-runner:
