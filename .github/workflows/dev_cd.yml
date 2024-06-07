@@ -1,6 +1,10 @@
 name: "Continuous Deployment"
 on:
   workflow_call:
+    inputs:
+      image-name:
+        required: true
+        type: string
   
 jobs:
   push_to_registry:
@@ -28,9 +32,10 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
-           ghcr.io/ingsis-grupo1-2024/echo:${{ steps.short-sha.outputs.sha }}
-           ghcr.io/ingsis-grupo1-2024/echo:latest
+           ghcr.io/ingsis-grupo1-2024/${{inputs.image-name}}:${{ steps.short-sha.outputs.sha }}
+           ghcr.io/ingsis-grupo1-2024/${{inputs.image-name}}:latest
            
           build-args: |
             ACTOR=${{ github.repository_owner }}
