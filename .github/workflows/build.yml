@@ -18,5 +18,5 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assemble
         env:
-          GITHUB_AUTHOR: ${{ github.actor }}
+          GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
