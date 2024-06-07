@@ -3,7 +3,7 @@ version: '3'
 services:
   api-runner:
     container_name: "api-runner"
-    image: ghcr.io/ingsis-grupo1-2024/echo:latest
+    image: ghcr.io/ingsis-grupo1-2024/snippet-runner:latest
     ports:
       - ${DB_PORT_RUNNER}:${DB_PORT_RUNNER}
     environment:
