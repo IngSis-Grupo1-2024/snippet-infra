@@ -30,6 +30,7 @@ jobs:
           push: true
           tags: |
            ghcr.io/ingsis-grupo1-2024/echo:${{ steps.short-sha.outputs.sha }}
+           ghcr.io/ingsis-grupo1-2024/echo:latest
            
           build-args: |
             ACTOR=${{ github.repository_owner }}
