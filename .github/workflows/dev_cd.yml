@@ -30,6 +30,7 @@ jobs:
           push: true
           tags: |
            ghcr.io/ingsis-grupo1-2024/echo:${{ steps.short-sha.outputs.sha }}
+           
           build-args: |
             GITHUB_AUTHOR=${{ github.actor }}
             GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
