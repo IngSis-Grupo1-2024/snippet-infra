@@ -5,7 +5,10 @@ on:
       image-name:
         required: true
         type: string
-  
+      env-name:
+        required: true
+        type: string
+
 jobs:
   push_to_registry:
     name: Push Docker image to GitHub Packages
@@ -34,8 +37,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-           ghcr.io/ingsis-grupo1-2024/${{inputs.image-name}}:${{ steps.short-sha.outputs.sha }}
-           ghcr.io/ingsis-grupo1-2024/${{inputs.image-name}}:latest
+           ghcr.io/ingsis-grupo1-2024/${{inputs.image-name}}-${{inputs.env-name}}:${{ steps.short-sha.outputs.sha }}
+           ghcr.io/ingsis-grupo1-2024/${{inputs.image-name}}-${{inputs.env-name}}:latest
            
           build-args: |
             ACTOR=${{ github.repository_owner }}
