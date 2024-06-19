@@ -1,28 +1,36 @@
 version: '3'
 
 services:
+#  new-relic:
+#    container_name: "new-relic"
+#    image: newrelic/infrastructure:latest
+#    environment:
+#      NRIA_LICENSE_KEY: e6119037950b025531fa46d58265530cFFFFNRAL
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
   api-runner:
     container_name: "api-runner"
-    image: ghcr.io/ingsis-grupo1-2024/snippet-runner:latest
+    image: ghcr.io/ingsis-grupo1-2024/snippet-runner-main:f61f2863
     ports:
-      - ${DB_PORT_RUNNER}:${DB_PORT_RUNNER}
+      - 8080:8080
     environment:
-#   best idea -> .env in repository
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME_RUNNER}
-      DB_HOST: ${DB_NAME_RUNNER}
-      DB_PORT: ${DB_PORT_RUNNER}
+      DB_USER: sa
+      DB_PASSWORD: password
+      DB_NAME: db-runner
+      DB_HOST: postgres_db
+      DB_PORT: 5432
+      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
+      NEW_RELIC_APP_NAME: SnippetRunner
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_RUNNER_KEY}
   db-runner:
-    container_name: db-runner
+    container_name: postgres_db
     image: postgres:12
     ports:
-      - ${POSTGRES_PORT_RUNNER}:5432
+      - 5432:5432
     environment:
-      #   best idea -> .env in repository
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB_RUNNER}
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db-runner
     volumes:
       - db-runner:/var/lib/postgresql/data
 
@@ -54,59 +62,59 @@ services:
 #    volumes:
 #      - db-operations:/var/lib/postgresql/data
 
-#  api-configurations:
-#    container_name: "api-configurations"
-#    build:
-#      context: https://github.com/IngSis-Grupo1-2024/snippet-configurations.git
-#      dockerfile: Dockerfile.multi
-#    ports:
-#      - ${DB_PORT_CONFIGURATIONS}:${DB_PORT_CONFIGURATIONS}
-#    environment:
-#      #   best idea -> .env in repository
-#      DB_USER: ${DB_USER}
-#      DB_PASSWORD: ${DB_PASSWORD}
-#      DB_NAME: ${DB_NAME_CONFIGURATIONS}
-#      DB_HOST: ${DB_NAME_CONFIGURATIONS}
-#      DB_PORT: ${DB_PORT_CONFIGURATIONS}
-#  db-configurations:
-#    container_name: db-configurations
-#    image: postgres:12
-#    ports:
-#      - ${POSTGRES_PORT_CONFIGURATIONS}:5432
-#    environment:
-#      #   best idea -> .env in repository
-#      POSTGRES_USER: ${POSTGRES_USER}
-#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#      POSTGRES_DB: ${POSTGRES_DB_CONFIGURATIONS}
-#    volumes:
-#      - db-configurations:/var/lib/postgresql/data
+  api-configurations:
+    container_name: "api-configurations"
+    image: ghcr.io/ingsis-grupo1-2024/snippet-configurations-main:latest
+    ports:
+      - 8082:8082
+    environment:
+      #   best idea -> .env in repository
+      DB_USER: sa
+      DB_PASSWORD: password
+      DB_NAME: db-configurations
+      DB_HOST: conf_postgres_db
+      DB_PORT: 5434
+      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
+      NEW_RELIC_APP_NAME: SnippetConfigurations
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_CONF_KEY}
+  db-configurations:
+    container_name: conf_postgres_db
+    image: postgres:12
+    ports:
+      - 5434:5432
+    environment:
+      #   best idea -> .env in repository
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db-configurations
+    volumes:
+      - db-configurations:/var/lib/postgresql/data
 
-#  api-permissions:
-#    container_name: "api-permissions"
-#    build:
-#      context: https://github.com/IngSis-Grupo1-2024/snippet-permission.git
-#      dockerfile: Dockerfile.multi
-#    ports:
-#      - ${DB_PORT_PERMISSIONS}:${DB_PORT_PERMISSIONS}
-#    environment:
-#      #   best idea -> .env in repository
-#      DB_USER: ${DB_USER}
-#      DB_PASSWORD: ${DB_PASSWORD}
-#      DB_NAME: ${DB_NAME_PERMISSIONS}
-#      DB_HOST: ${DB_NAME_PERMISSIONS}
-#      DB_PORT: ${DB_PORT_PERMISSIONS}
-#  db-permissions:
-#    container_name: db-permissions
-#    image: postgres:12
-#    ports:
-#      - ${POSTGRES_PORT_PERMISSIONS}:5432
-#    environment:
-#      #   best idea -> .env in repository
-#      POSTGRES_USER: ${POSTGRES_USER}
-#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#      POSTGRES_DB: ${POSTGRES_DB_PERMISSIONS}
-#    volumes:
-#      - db-permissions:/var/lib/postgresql/data
+  api-permissions:
+    container_name: "api-permissions"
+    image: ghcr.io/ingsis-grupo1-2024/snippet-permission-main:latest
+    ports:
+      - 8083:8083
+    environment:
+      DB_USER: sa
+      DB_PASSWORD: password
+      DB_NAME: db-permissions
+      DB_HOST: perm_postgres_db
+      DB_PORT: 5435
+      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
+      NEW_RELIC_APP_NAME: SnippetPermission
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_PERM_KEY}
+  db-permissions:
+    container_name: perm_postgres_db
+    image: postgres:12
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db-permissions
+    volumes:
+      - db-permissions:/var/lib/postgresql/data
 
 volumes:
   db-runner:
