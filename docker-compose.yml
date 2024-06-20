@@ -1,13 +1,6 @@
-version: '3'
+version: '3.9'
 
 services:
-#  new-relic:
-#    container_name: "new-relic"
-#    image: newrelic/infrastructure:latest
-#    environment:
-#      NRIA_LICENSE_KEY: e6119037950b025531fa46d58265530cFFFFNRAL
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
   api-runner:
     container_name: "api-runner"
     image: ghcr.io/ingsis-grupo1-2024/snippet-runner-main:f61f2863
@@ -19,9 +12,6 @@ services:
       DB_NAME: db-runner
       DB_HOST: postgres_db
       DB_PORT: 5432
-      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
-      NEW_RELIC_APP_NAME: SnippetRunner
-      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_RUNNER_KEY}
   db-runner:
     container_name: postgres_db
     image: postgres:12
@@ -116,8 +106,33 @@ services:
     volumes:
       - db-permissions:/var/lib/postgresql/data
 
+  asset-service-api:
+    container_name: "asset_service"
+    image: ghcr.io/austral-ingsis/snippet-asset-service:latest
+    ports:
+      - "8084:8084"
+    environment:
+      AZURE_HOST: "http://azurite"
+      NEW_RELIC_AGENT_ENABLED: false
+
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    container_name: "azurite"
+    hostname: azurite
+    restart: always
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    volumes:
+      - blob:/workspace
+
+
 volumes:
   db-runner:
   db-operations:
   db-permissions:
   db-configurations:
+  blob:
+    external: false
