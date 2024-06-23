@@ -5,7 +5,7 @@ services:
     container_name: "api-runner"
     image: ghcr.io/ingsis-grupo1-2024/snippet-runner-main:f61f2863
     ports:
-      - 8080:8080
+      - "8084:8084"
     environment:
       DB_USER: sa
       DB_PASSWORD: password
@@ -16,7 +16,7 @@ services:
     container_name: postgres_db
     image: postgres:12
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: password
@@ -56,7 +56,7 @@ services:
     container_name: "api-configurations"
     image: ghcr.io/ingsis-grupo1-2024/snippet-configurations-main:latest
     ports:
-      - 8082:8082
+      - "8082:8082"
     environment:
       #   best idea -> .env in repository
       DB_USER: sa
@@ -84,7 +84,7 @@ services:
     container_name: "api-permissions"
     image: ghcr.io/ingsis-grupo1-2024/snippet-permission-main:latest
     ports:
-      - 8083:8083
+      - "8083:8083"
     environment:
       DB_USER: sa
       DB_PASSWORD: password
@@ -108,13 +108,14 @@ services:
 
   asset-service-api:
     container_name: "asset_service"
-    image: ghcr.io/austral-ingsis/snippet-asset-service:latest
+    image: ghcr.io/ingsis-grupo1-2024/asset-service-main:latest
     ports:
-      - "8084:8084"
+      - "8080:8080"
     environment:
       AZURE_HOST: "http://azurite"
-      NEW_RELIC_AGENT_ENABLED: false
-
+      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
+      NEW_RELIC_APP_NAME: asset-service
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_ASSET_SERVICE_KEY}
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
