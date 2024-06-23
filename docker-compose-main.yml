@@ -5,13 +5,16 @@ services:
     container_name: "api-runner"
     image: ghcr.io/ingsis-grupo1-2024/snippet-runner-main:f61f2863
     ports:
-      - 8080:8080
+      - 8084:8084
     environment:
       DB_USER: sa
       DB_PASSWORD: password
       DB_NAME: db-runner
       DB_HOST: postgres_db
       DB_PORT: 5432
+      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
+      NEW_RELIC_APP_NAME: SnippetRunner
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_RUNNER_KEY}
   db-runner:
     container_name: postgres_db
     image: postgres:12
@@ -24,56 +27,39 @@ services:
     volumes:
       - db-runner:/var/lib/postgresql/data
 
-
-#  api-operations:
-#    container_name: "api-operations"
-#    build:
-#      context: https://github.com/IngSis-Grupo1-2024/snippet-operations.git
-#      dockerfile: Dockerfile.multi
-#    ports:
-#      - ${DB_PORT_OPERATIONS}:${DB_PORT_OPERATIONS}
-#    environment:
-#      #   best idea -> .env in repository
-#      DB_USER: ${DB_USER}
-#      DB_PASSWORD: ${DB_PASSWORD}
-#      DB_NAME: ${DB_NAME_OPERATIONS}
-#      DB_HOST: ${DB_NAME_OPERATIONS}
-#      DB_PORT: ${DB_PORT_OPERATIONS}
-#  db-operations:
-#    container_name: db-operations
-#    image: postgres:12
-#    ports:
-#      - ${POSTGRES_PORT_OPERATIONS}:5432
-#    environment:
-#      #   best idea -> .env in repository
-#      POSTGRES_USER: ${POSTGRES_USER}
-#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#      POSTGRES_DB: ${POSTGRES_DB_OPERATIONS}
-#    volumes:
-#      - db-operations:/var/lib/postgresql/data
-
-  api-configurations:
-    container_name: "api-configurations"
-    image: ghcr.io/ingsis-grupo1-2024/snippet-configurations-main:latest
+  db-manager:
+    container_name: manager_postgres_db
+    image: postgres:12
     ports:
-      - 8082:8082
+      - 5433:5432
     environment:
-      #   best idea -> .env in repository
-      DB_USER: sa
-      DB_PASSWORD: password
-      DB_NAME: db-configurations
-      DB_HOST: conf_postgres_db
-      DB_PORT: 5434
-      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
-      NEW_RELIC_APP_NAME: SnippetConfigurations
-      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_CONF_KEY}
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db-manager
+    volumes:
+      - db-manager:/var/lib/postgresql/data
+
+  #  api-configurations:
+  #    container_name: "api-configurations"
+  #    image: ghcr.io/ingsis-grupo1-2024/snippet-configurations-dev:latest
+  #    ports:
+  #      - 8082:8082
+  #    environment:
+  #      #   best idea -> .env in repository
+  #      DB_USER: sa
+  #      DB_PASSWORD: password
+  #      DB_NAME: db-configurations
+  #      DB_HOST: conf_postgres_db
+  #      DB_PORT: 5434
+  #      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
+  #      NEW_RELIC_APP_NAME: SnippetConfigurations
+  #      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_CONF_KEY}
   db-configurations:
     container_name: conf_postgres_db
     image: postgres:12
     ports:
       - 5434:5432
     environment:
-      #   best idea -> .env in repository
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: password
       POSTGRES_DB: db-configurations
@@ -110,7 +96,7 @@ services:
     container_name: "asset_service"
     image: ghcr.io/austral-ingsis/snippet-asset-service:latest
     ports:
-      - "8084:8084"
+      - "8080:8080"
     environment:
       AZURE_HOST: "http://azurite"
       NEW_RELIC_AGENT_ENABLED: false
@@ -131,7 +117,7 @@ services:
 
 volumes:
   db-runner:
-  db-operations:
+  db-manager:
   db-permissions:
   db-configurations:
   blob:
