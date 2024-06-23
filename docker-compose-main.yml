@@ -5,7 +5,7 @@ services:
     container_name: "api-runner"
     image: ghcr.io/ingsis-grupo1-2024/snippet-runner-main:f61f2863
     ports:
-      - 8084:8084
+      - "8084:8084"
     environment:
       DB_USER: sa
       DB_PASSWORD: password
@@ -19,7 +19,7 @@ services:
     container_name: postgres_db
     image: postgres:12
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: password
@@ -31,7 +31,7 @@ services:
     container_name: manager_postgres_db
     image: postgres:12
     ports:
-      - 5433:5432
+      - "5433:5432"
     environment:
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: password
@@ -58,7 +58,7 @@ services:
     container_name: conf_postgres_db
     image: postgres:12
     ports:
-      - 5434:5432
+      - "5434:5432"
     environment:
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: password
@@ -70,7 +70,7 @@ services:
     container_name: "api-permissions"
     image: ghcr.io/ingsis-grupo1-2024/snippet-permission-main:latest
     ports:
-      - 8083:8083
+      - "8083:8083"
     environment:
       DB_USER: sa
       DB_PASSWORD: password
