@@ -3,15 +3,10 @@ version: '3.9'
 services:
   api-runner:
     container_name: "api-runner"
-    image: ghcr.io/ingsis-grupo1-2024/snippet-runner-main:f61f2863
+    image: ghcr.io/ingsis-grupo1-2024/snippet-runner-dev:latest
     ports:
       - "8084:8084"
     environment:
-      DB_USER: sa
-      DB_PASSWORD: password
-      DB_NAME: db-runner
-      DB_HOST: postgres_db
-      DB_PORT: 5432
       NEW_RELIC_EXPERIMENTAL_RUNTIME: true
       NEW_RELIC_APP_NAME: SnippetRunner
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_RUNNER_KEY}
@@ -19,6 +14,35 @@ services:
       AUTH0_CLIENT_ID: ${AUTH_CLIENT_ID}
       AUTH0_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_STREAM_REQUEST_LINT_KEY: request_lint
+      REDIS_STREAM_RESULT_LINT_KEY: result_lint
+      REDIS_STREAM_GROUP_LINT: lint_group
+
+  api-manager:
+    container_name: "api-manager"
+    image: ghcr.io/ingsis-grupo1-2024/snippet-manager-dev:latest
+    ports:
+      - "8081:8081"
+    environment:
+      DB_USER: sa
+      DB_PASSWORD: password
+      DB_NAME: db-manager
+      DB_HOST: manager_postgres_db
+      DB_PORT: 5432
+      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
+      NEW_RELIC_APP_NAME: SnippetManager
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_MANAGER_KEY}
+      AUTH_SERVER_URI: ${AUTH_SERVER_URI}
+      AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
+      AUTH_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_STREAM_REQUEST_LINT_KEY: request_lint
+      REDIS_STREAM_RESULT_LINT_KEY: result_lint
+      REDIS_STREAM_GROUP_LINT: lint_group
 
   db-manager:
     container_name: manager_postgres_db
@@ -36,13 +60,13 @@ services:
     container_name: "api-configurations"
     image: ghcr.io/ingsis-grupo1-2024/snippet-configurations-dev:latest
     ports:
-      - 8082:8082
+      - "8082:8082"
     environment:
       DB_USER: sa
       DB_PASSWORD: password
       DB_NAME: db-configurations
       DB_HOST: conf_postgres_db
-      DB_PORT: 5434
+      DB_PORT: 5432
       NEW_RELIC_EXPERIMENTAL_RUNTIME: true
       NEW_RELIC_APP_NAME: SnippetConfigurations
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_CONF_KEY}
@@ -55,7 +79,7 @@ services:
     container_name: conf_postgres_db
     image: postgres:12
     ports:
-      - 5434:5432
+      - "5434:5432"
     environment:
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: password
@@ -69,11 +93,11 @@ services:
     ports:
       - "8083:8083"
     environment:
-      DB_USER: sa
+      DB_USERNAME: sa
       DB_PASSWORD: password
       DB_NAME: db-permissions
       DB_HOST: perm_postgres_db
-      DB_PORT: 5435
+      DB_PORT: 5432
       NEW_RELIC_EXPERIMENTAL_RUNTIME: true
       NEW_RELIC_APP_NAME: SnippetPermission
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_PERM_KEY}
@@ -81,6 +105,7 @@ services:
       AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
       AUTH_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+
   db-permissions:
     container_name: perm_postgres_db
     image: postgres:12
@@ -102,7 +127,6 @@ services:
       AZURE_HOST: "http://azurite"
       NEW_RELIC_AGENT_ENABLED: false
 
-
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
     container_name: "azurite"
@@ -115,11 +139,16 @@ services:
     volumes:
       - blob:/workspace
 
+  redis:
+    container_name: "redis"
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
 
 volumes:
-  db-runner:
   db-manager:
   db-permissions:
   db-configurations:
+  redis:
   blob:
     external: false
