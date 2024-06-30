@@ -43,6 +43,10 @@ services:
       REDIS_STREAM_REQUEST_LINT_KEY: request_lint
       REDIS_STREAM_RESULT_LINT_KEY: result_lint
       REDIS_STREAM_GROUP_LINT: lint_group
+      AZURITE_BUCKET_V1: http://asset-service:8080/v1/asset/snippets
+      SNIPPET_CONF_URL: http://api-configurations:8082
+      SNIPPET_PERM_URL: http://api-permissions:8083
+      SNIPPET_RUNNER_URL: http://api-runner:8084
 
   db-manager:
     container_name: manager_postgres_db
@@ -118,8 +122,8 @@ services:
     volumes:
       - db-permissions:/var/lib/postgresql/data
 
-  asset-service-api:
-    container_name: "asset_service"
+  asset-service:
+    container_name: "asset-service"
     image: ghcr.io/austral-ingsis/snippet-asset-service:latest
     ports:
       - "8080:8080"
