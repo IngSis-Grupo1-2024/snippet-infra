@@ -44,11 +44,30 @@ services:
       REDIS_STREAM_RESULT_LINT_KEY: result_lint
       REDIS_STREAM_GROUP_LINT: lint_group
 
+  api-manager:
+    container_name: "api-manager"
+    image: ghcr.io/ingsis-grupo1-2024/snippet-manager-dev:latest
+    ports:
+      - 8081:8081
+    environment:
+      DB_USER: sa
+      DB_PASSWORD: password
+      DB_NAME: db-manager
+      DB_HOST: db-manager
+      DB_PORT: 5432
+      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
+      NEW_RELIC_APP_NAME: SnippetManager
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_MANAGER_KEY}
+      AUTH0_SERVER_URI: ${AUTH_SERVER_URI}
+      AUTH0_CLIENT_ID: ${AUTH_CLIENT_ID}
+      AUTH0_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+
   db-manager:
-    container_name: manager_postgres_db
+    container_name: "db-manager"
     image: postgres:12
     ports:
-      - 5433:5432
+      - 5432:5432
     environment:
       POSTGRES_USER: sa
       POSTGRES_PASSWORD: password
@@ -76,7 +95,7 @@ services:
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
 
   db-configurations:
-    container_name: conf_postgres_db
+    container_name: "db-configurations"
     image: postgres:12
     ports:
       - "5434:5432"
@@ -107,7 +126,7 @@ services:
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
 
   db-permissions:
-    container_name: perm_postgres_db
+    container_name: "db-permissions"
     image: postgres:12
     ports:
       - "5435:5432"
