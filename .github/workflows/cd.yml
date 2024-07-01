@@ -8,9 +8,6 @@ on:
       env-name:
         required: true
         type: string
-      additional-build-args:
-        required: false
-        type: string
 
 jobs:
   push_to_registry:
@@ -46,4 +43,3 @@ jobs:
           build-args: |
             ACTOR=${{ github.repository_owner }}
             TOKEN=${{ secrets.GITHUB_TOKEN }}
-            ${{ inputs.additional-build-args }}
