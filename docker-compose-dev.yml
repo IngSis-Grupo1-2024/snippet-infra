@@ -19,6 +19,8 @@ services:
       REDIS_STREAM_REQUEST_LINT_KEY: request_lint
       REDIS_STREAM_RESULT_LINT_KEY: result_lint
       REDIS_STREAM_GROUP_LINT: lint_group
+      LINT_URL: /app/lint.json
+      FORMAT_URL: /app/format.json
 
   api-manager:
     container_name: "api-manager"
@@ -31,7 +33,6 @@ services:
       DB_NAME: db-manager
       DB_HOST: manager_postgres_db
       DB_PORT: 5432
-      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
       NEW_RELIC_APP_NAME: SnippetManager
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_MANAGER_KEY}
       AUTH_SERVER_URI: ${AUTH_SERVER_URI}
@@ -71,7 +72,6 @@ services:
       DB_NAME: db-configurations
       DB_HOST: conf_postgres_db
       DB_PORT: 5432
-      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
       NEW_RELIC_APP_NAME: SnippetConfigurations
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_CONF_KEY}
       AUTH_SERVER_URI: ${AUTH_SERVER_URI}
@@ -102,7 +102,6 @@ services:
       DB_NAME: db-permissions
       DB_HOST: perm_postgres_db
       DB_PORT: 5432
-      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
       NEW_RELIC_APP_NAME: SnippetPermission
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_PERM_KEY}
       AUTH_SERVER_URI: ${AUTH_SERVER_URI}
