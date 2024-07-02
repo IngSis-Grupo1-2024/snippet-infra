@@ -6,9 +6,6 @@ on:
       container-name:
         required: true
         type: string
-      virtual-machine-key:
-        required: true
-        type: string
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,7 +16,7 @@ jobs:
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ inputs.virtual-machine-key }}
+          ssh-private-key: ${{ secrets.VM_KEY }}
 
       - name: Connect to VM and rebuild container
         run: |
