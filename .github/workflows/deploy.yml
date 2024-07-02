@@ -1,0 +1,22 @@
+name: "Continuous Deployment"
+
+on:
+  workflow_call:
+    inputs:
+      container-name:
+        required: true
+        type: string
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to VM and rebuild container
+        run: |
+          echo "$SSH_PRIVATE_KEY" > ../private.key
+          sudo chmod 600 ../private.key
+          ssh -i $SSH_PRIVATE_KEY ingsis-group1@51.8.88.134
+          sudo docker-compose -f docker-compose-dev.yml down ${{inputs.container-name}}
+          sudo docker-compose -f docker-compose-dev.yml up ${{inputs.container-name}}
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.VM_KEY}}
