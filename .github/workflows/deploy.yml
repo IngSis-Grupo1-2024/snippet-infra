@@ -25,6 +25,7 @@ jobs:
       - name: Connect to VM and rebuild container
         run: |
           ssh -o StrictHostKeyChecking=no ingsis-group1@51.8.88.134 << 'EOF'
+            cd snippet-infra
             sudo docker-compose -f docker-compose-dev.yml down ${{ inputs.container-name }}
             sudo docker-compose -f docker-compose-dev.yml up --build -d ${{ inputs.container-name }}
           EOF
