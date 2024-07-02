@@ -6,20 +6,20 @@ on:
       container-name:
         required: true
         type: string
+      virtual-machine-key:
+        required: true
+        type: string
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
-      - name: Print debug information
-        run: echo "VM_KEY is set" && run echo ${{ secrets.FRONTEND_URL }}
-        if: ${{ secrets.VM_KEY != '' }}
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.VM_KEY }}
+          ssh-private-key: ${{ inputs.virtual-machine-key }}
 
       - name: Connect to VM and rebuild container
         run: |
