@@ -182,7 +182,8 @@ services:
     volumes:
       - ./conf.d:/etc/nginx/conf.d:ro
       - ./certbot/www:/var/www/certbot
-      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/conf:/etc/letsencryt
+      - ./certbot/www:/var/www/certbot
   certbot:
     image: certbot/certbot:latest
     volumes:

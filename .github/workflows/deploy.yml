@@ -1,0 +1,27 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      container-name:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enter Virtual machine
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ../private.key
+          sudo chmod 600 ../private.key
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh -i ../private.key $ VIRTUAL_MACHINE_ADDRESS
+          git pull
+          
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          VIRTUAL_MACHINE_ADDRESS: ${{ secrets.VIRTUAL_MACHINE_ADDRESS }}
+
