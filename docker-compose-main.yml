@@ -180,7 +180,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./conf.d:/etc/nginx/conf.d:ro
+      - ./prod-conf.d:/etc/nginx/conf.d:ro
       - ./certbot/www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
   certbot:
