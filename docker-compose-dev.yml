@@ -1,13 +1,12 @@
-version: '3.9'
+version: '3.3'
 
 services:
   api-runner:
     container_name: "api-runner"
-    image: ghcr.io/ingsis-grupo1-2024/snippet-runner-dev:latest
-    ports:
-      - "8084:8084"
+    image: ghcr.io/ingsis-grupo1-2024/snippet-runner-dev:f32d06b2
+    expose:
+      - "8084"
     environment:
-      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
       NEW_RELIC_APP_NAME: SnippetRunner
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_RUNNER_KEY}
       AUTH_SERVER_URI: ${AUTH_SERVER_URI}
@@ -24,9 +23,9 @@ services:
 
   api-manager:
     container_name: "api-manager"
-    image: ghcr.io/ingsis-grupo1-2024/snippet-manager-dev:latest
-    ports:
-      - "8081:8081"
+    image:  ghcr.io/ingsis-grupo1-2024/snippet-manager-dev:082120a9
+    expose:
+      - "8081"
     environment:
       DB_USER: sa
       DB_PASSWORD: password
@@ -60,12 +59,14 @@ services:
       POSTGRES_DB: db-manager
     volumes:
       - db-manager:/var/lib/postgresql/data
+    expose:
+      - "5433"
 
   api-configurations:
     container_name: "api-configurations"
     image: ghcr.io/ingsis-grupo1-2024/snippet-configurations-dev:latest
-    ports:
-      - "8082:8082"
+    expose:
+      - "8082"
     environment:
       DB_USER: sa
       DB_PASSWORD: password
@@ -90,10 +91,14 @@ services:
       POSTGRES_DB: db-configurations
     volumes:
       - db-configurations:/var/lib/postgresql/data
+    expose:
+      - "5434"
 
   api-permissions:
     container_name: "api-permissions"
     image: ghcr.io/ingsis-grupo1-2024/snippet-permission-dev:latest
+    expose:
+      - "8083"
     ports:
       - "8083:8083"
     environment:
@@ -109,6 +114,7 @@ services:
       AUTH_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
 
+
   db-permissions:
     container_name: perm_postgres_db
     image: postgres:12
@@ -120,15 +126,16 @@ services:
       POSTGRES_DB: db-permissions
     volumes:
       - db-permissions:/var/lib/postgresql/data
+    expose:
+      - "5435"
 
   asset-service:
     container_name: "asset-service"
     image: ghcr.io/austral-ingsis/snippet-asset-service:latest
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     environment:
       AZURE_HOST: "http://azurite"
-      NEW_RELIC_AGENT_ENABLED: false
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
@@ -147,6 +154,46 @@ services:
     image: redis:6-alpine
     ports:
       - "6379:6379"
+  duckdns:
+    image: lscr.io/linuxserver/duckdns:latest
+    container_name: duckdns
+    environment:
+      - SUBDOMAINS=${DUCKDNS_DEV_DOMAIN}
+      - TOKEN=${DUCKDNS_TOKEN}
+    restart: unless-stopped
+  webserver:
+    image: nginx:latest
+    depends_on:
+      - "redis"
+      - "duckdns"
+      - "api-manager"
+      - "api-permissions"
+      - "api-configurations"
+      - "api-runner"
+      - "db-manager"
+      - "db-configurations"
+      - "db-permissions"
+      - "asset-service"
+      - "azurite"
+      - "printscript-ui"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d:ro
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencryt
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+
+  printscript-ui:
+    image: ghcr.io/ingsis-grupo1-2024/printscript-ui-dev:latest
+    container_name: printscript-ui
+    expose:
+      - "80"
 
 volumes:
   db-manager:
@@ -155,3 +202,4 @@ volumes:
   redis:
   blob:
     external: false
+
