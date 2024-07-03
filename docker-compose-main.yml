@@ -1,124 +1,205 @@
-version: '3.9'
+version: '3.3'
 
 services:
-  api-runner:
-    container_name: "api-runner"
-    image: ghcr.io/ingsis-grupo1-2024/snippet-runner-main:f61f2863
-    ports:
-      - "8084:8084"
+#  api-runner:
+#    container_name: "api-runner"
+#    image: ghcr.io/ingsis-grupo1-2024/snippet-runner-main:f32d06b2
+#    expose:
+#      - "8084"
+#    environment:
+#      NEW_RELIC_APP_NAME: SnippetRunner
+#      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_RUNNER_KEY}
+#      AUTH_SERVER_URI: ${AUTH_SERVER_URI}
+#      AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
+#      AUTH_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
+#      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+#      REDIS_HOST: redis
+#      REDIS_PORT: 6379
+#      REDIS_STREAM_REQUEST_LINT_KEY: request_lint
+#      REDIS_STREAM_RESULT_LINT_KEY: result_lint
+#      REDIS_STREAM_GROUP_LINT: lint_group
+#      LINT_URL: /app/lint.json
+#      FORMAT_URL: /app/format.json
+#
+#  api-manager:
+#    container_name: "api-manager"
+#    image:  ghcr.io/ingsis-grupo1-2024/snippet-manager-main:082120a9
+#    expose:
+#      - "8081"
+#    environment:
+#      DB_USER: sa
+#      DB_PASSWORD: password
+#      DB_NAME: db-manager
+#      DB_HOST: manager_postgres_db
+#      DB_PORT: 5432
+#      NEW_RELIC_APP_NAME: SnippetManager
+#      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_MANAGER_KEY}
+#      AUTH_SERVER_URI: ${AUTH_SERVER_URI}
+#      AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
+#      AUTH_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
+#      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+#      REDIS_HOST: redis
+#      REDIS_PORT: 6379
+#      REDIS_STREAM_REQUEST_LINT_KEY: request_lint
+#      REDIS_STREAM_RESULT_LINT_KEY: result_lint
+#      REDIS_STREAM_GROUP_LINT: lint_group
+#      AZURITE_BUCKET_V1: http://asset-service:8080/v1/asset/snippets
+#      SNIPPET_CONF_URL: http://api-configurations:8082
+#      SNIPPET_PERM_URL: http://api-permissions:8083
+#      SNIPPET_RUNNER_URL: http://api-runner:8084
+#
+#  db-manager:
+#    container_name: manager_postgres_db
+#    image: postgres:12
+#    ports:
+#      - "5433:5432"
+#    environment:
+#      POSTGRES_USER: sa
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_DB: db-manager
+#    volumes:
+#      - db-manager:/var/lib/postgresql/data
+#    expose:
+#      - "5433"
+#
+#  api-configurations:
+#    container_name: "api-configurations"
+#    image: ghcr.io/ingsis-grupo1-2024/snippet-configurations-main:latest
+#    expose:
+#      - "8082"
+#    environment:
+#      DB_USER: sa
+#      DB_PASSWORD: password
+#      DB_NAME: db-configurations
+#      DB_HOST: conf_postgres_db
+#      DB_PORT: 5432
+#      NEW_RELIC_APP_NAME: SnippetConfigurations
+#      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_CONF_KEY}
+#      AUTH_SERVER_URI: ${AUTH_SERVER_URI}
+#      AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
+#      AUTH_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
+#      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+#
+#  db-configurations:
+#    container_name: conf_postgres_db
+#    image: postgres:12
+#    ports:
+#      - "5434:5432"
+#    environment:
+#      POSTGRES_USER: sa
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_DB: db-configurations
+#    volumes:
+#      - db-configurations:/var/lib/postgresql/data
+#    expose:
+#      - "5434"
+#
+#  api-permissions:
+#    container_name: "api-permissions"
+#    image: ghcr.io/ingsis-grupo1-2024/snippet-permission-main:latest
+#    expose:
+#      - "8083"
+#    ports:
+#      - "8083:8083"
+#    environment:
+#      DB_USERNAME: sa
+#      DB_PASSWORD: password
+#      DB_NAME: db-permissions
+#      DB_HOST: perm_postgres_db
+#      DB_PORT: 5432
+#      NEW_RELIC_APP_NAME: SnippetPermission
+#      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_PERM_KEY}
+#      AUTH_SERVER_URI: ${AUTH_SERVER_URI}
+#      AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
+#      AUTH_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
+#      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+#
+#
+#  db-permissions:
+#    container_name: perm_postgres_db
+#    image: postgres:12
+#    ports:
+#      - "5435:5432"
+#    environment:
+#      POSTGRES_USER: sa
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_DB: db-permissions
+#    volumes:
+#      - db-permissions:/var/lib/postgresql/data
+#    expose:
+#      - "5435"
+#
+#  asset-service:
+#    container_name: "asset-service"
+#    image: ghcr.io/austral-ingsis/snippet-asset-service:latest
+#    expose:
+#      - "8080"
+#    environment:
+#      AZURE_HOST: "http://azurite"
+#
+#  azurite:
+#    image: mcr.microsoft.com/azure-storage/azurite
+#    container_name: "azurite"
+#    hostname: azurite
+#    restart: always
+#    ports:
+#      - "10000:10000"
+#      - "10001:10001"
+#      - "10002:10002"
+#    volumes:
+#      - blob:/workspace
+#
+#  redis:
+#    container_name: "redis"
+#    image: redis:6-alpine
+#    ports:
+#      - "6379:6379"
+  duckdns:
+    image: lscr.io/linuxserver/duckdns:latest
+    container_name: duckdns
     environment:
-      DB_USER: sa
-      DB_PASSWORD: password
-      DB_NAME: db-runner
-      DB_HOST: postgres_db
-      DB_PORT: 5432
-      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
-      NEW_RELIC_APP_NAME: SnippetRunner
-      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_RUNNER_KEY}
-  db-runner:
-    container_name: postgres_db
-    image: postgres:12
+      - SUBDOMAINS=${DUCKDNS_PROD_DOMAIN}
+      - TOKEN=${DUCKDNS_TOKEN}
+    restart: unless-stopped
+  webserver:
+    image: nginx:latest
+#    depends_on:
+#      - "redis"
+#      - "duckdns"
+#      - "api-manager"
+#      - "api-permissions"
+#      - "api-configurations"
+#      - "api-runner"
+#      - "db-manager"
+#      - "db-configurations"
+#      - "db-permissions"
+#      - "asset-service"
+#      - "azurite"
+#      - "printscript-ui"
     ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: sa
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: db-runner
+      - "80:80"
+      - "443:443"
     volumes:
-      - db-runner:/var/lib/postgresql/data
-
-  db-manager:
-    container_name: manager_postgres_db
-    image: postgres:12
-    ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_USER: sa
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: db-manager
+      - ./conf.d:/etc/nginx/conf.d:ro
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+  certbot:
+    image: certbot/certbot:latest
     volumes:
-      - db-manager:/var/lib/postgresql/data
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
 
-  #  api-configurations:
-  #    container_name: "api-configurations"
-  #    image: ghcr.io/ingsis-grupo1-2024/snippet-configurations-dev:latest
-  #    ports:
-  #      - 8082:8082
-  #    environment:
-  #      #   best idea -> .env in repository
-  #      DB_USER: sa
-  #      DB_PASSWORD: password
-  #      DB_NAME: db-configurations
-  #      DB_HOST: conf_postgres_db
-  #      DB_PORT: 5434
-  #      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
-  #      NEW_RELIC_APP_NAME: SnippetConfigurations
-  #      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_CONF_KEY}
-  db-configurations:
-    container_name: conf_postgres_db
-    image: postgres:12
-    ports:
-      - "5434:5432"
-    environment:
-      POSTGRES_USER: sa
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: db-configurations
-    volumes:
-      - db-configurations:/var/lib/postgresql/data
+#  printscript-ui:
+#    image: ghcr.io/ingsis-grupo1-2024/printscript-ui-main:latest
+#    container_name: printscript-ui
+#    expose:
+#      - "80"
 
-  api-permissions:
-    container_name: "api-permissions"
-    image: ghcr.io/ingsis-grupo1-2024/snippet-permission-main:latest
-    ports:
-      - "8083:8083"
-    environment:
-      DB_USER: sa
-      DB_PASSWORD: password
-      DB_NAME: db-permissions
-      DB_HOST: perm_postgres_db
-      DB_PORT: 5435
-      NEW_RELIC_EXPERIMENTAL_RUNTIME: true
-      NEW_RELIC_APP_NAME: SnippetPermission
-      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_PERM_KEY}
-  db-permissions:
-    container_name: perm_postgres_db
-    image: postgres:12
-    ports:
-      - 5435:5432
-    environment:
-      POSTGRES_USER: sa
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: db-permissions
-    volumes:
-      - db-permissions:/var/lib/postgresql/data
+#volumes:
+#  db-manager:
+#  db-permissions:
+#  db-configurations:
+#  redis:
+#  blob:
+#    external: false
 
-  asset-service-api:
-    container_name: "asset_service"
-    image: ghcr.io/austral-ingsis/snippet-asset-service:latest
-    ports:
-      - "8080:8080"
-    environment:
-      AZURE_HOST: "http://azurite"
-      NEW_RELIC_AGENT_ENABLED: false
-
-
-  azurite:
-    image: mcr.microsoft.com/azure-storage/azurite
-    container_name: "azurite"
-    hostname: azurite
-    restart: always
-    ports:
-      - "10000:10000"
-      - "10001:10001"
-      - "10002:10002"
-    volumes:
-      - blob:/workspace
-
-
-volumes:
-  db-runner:
-  db-manager:
-  db-permissions:
-  db-configurations:
-  blob:
-    external: false
