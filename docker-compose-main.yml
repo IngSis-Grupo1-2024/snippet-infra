@@ -189,11 +189,11 @@ services:
       - ./certbot/www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
 
-#  printscript-ui:
-#    image: ghcr.io/ingsis-grupo1-2024/printscript-ui-main:latest
-#    container_name: printscript-ui
-#    expose:
-#      - "80"
+  printscript-ui:
+    image: ghcr.io/ingsis-grupo1-2024/printscript-ui-dev:latest
+    container_name: printscript-ui
+    expose:
+      - "80"
 
 #volumes:
 #  db-manager:
