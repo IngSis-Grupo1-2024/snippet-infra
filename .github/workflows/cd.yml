@@ -43,3 +43,18 @@ jobs:
           build-args: |
             ACTOR=${{ github.repository_owner }}
             TOKEN=${{ secrets.GITHUB_TOKEN }}
+  dev-deploy:
+    if: inputs.env-name == 'dev'
+    uses: IngSis-Grupo1-2024/snippet-infra/.github/workflows/deploy-dev.yml@main
+    needs: push_to_registry
+    secrets: inherit
+    with:
+      container-name: ${{inputs.image-name}}
+
+  prod-deploy:
+    if: inputs.env-name == 'main'
+    uses: IngSis-Grupo1-2024/snippet-infra/.github/workflows/deploy-main.yml@main
+    needs: push_to_registry
+    secrets: inherit
+    with:
+      container-name: ${{inputs.image-name}}
