@@ -1,0 +1,29 @@
+name: "Deploy Infra to development"
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.PROD_VM_KEY }}
+
+      - name: Connect to VM and rebuild container
+        run: |
+          ssh -o StrictHostKeyChecking=no azureuser@20.42.96.135 << 'EOF'
+          sudo docker stop $(docker ps -a -q)
+          cd snippet-infra
+          git pull
+          git checkout main
+          sudo docker-compose -f docker-compose-main.yml up --build -d
+          EOF
+        shell: bash
